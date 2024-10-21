@@ -13,7 +13,7 @@
     "env": {
         "APP_ENV": "production",
         "APP_DEBUG": "true",
-        "APP_URL": "https://your.url.from.vercel.app",
+        "APP_URL": "https://test-project-api-laravel-and-angular.vercel.app/",
         "APP_KEY": "base64:WBh9xt76nyW/DCk/uNd3McMAAGH4K9CLzhX3Hhp5nbE=",
 
         "APP_CONFIG_CACHE": "/tmp/config.php",
