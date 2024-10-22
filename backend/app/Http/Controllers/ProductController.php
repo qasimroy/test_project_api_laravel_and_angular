@@ -8,19 +8,36 @@ use App\Http\Resources\ProductResource;
 
 class ProductController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        return ProductResource::collection(Product::with('categories', 'tags')->get());
+        $categoryNames = $request->query('category');
+        $tagNames = $request->query('tag');
+
+        $categoryNames = $categoryNames ? explode(',', $categoryNames) : [];
+        $tagNames = $tagNames ? explode(',', $tagNames) : [];
+
+        $products = Product::with('categories', 'tags')
+            ->when(count($categoryNames), function ($query) use ($categoryNames) {
+                return $query->whereHas('categories', function ($q) use ($categoryNames) {
+                    $q->whereIn('name', $categoryNames);
+                });
+            })
+            ->when(count($tagNames), function ($query) use ($tagNames) {
+                return $query->whereHas('tags', function ($q) use ($tagNames) {
+                    $q->whereIn('name', $tagNames);
+                });
+            })
+            ->get();
+
+        return ProductResource::collection($products);
     }
 
-    // Get a single product
     public function show($id)
     {
         $product = Product::with('categories', 'tags')->findOrFail($id);
         return new ProductResource($product);
     }
 
-    // Store a new product
     public function store(Request $request)
     {
         $validatedData = $request->validate([
@@ -34,17 +51,14 @@ class ProductController extends Controller
             'tags' => 'required|array',
         ]);
 
-        // Create product
         $product = Product::create($validatedData);
 
-        // Sync categories and tags
         $product->categories()->sync($validatedData['categories']);
         $product->tags()->sync($validatedData['tags']);
 
         return new ProductResource($product);
     }
 
-    // Update an existing product
     public function update(Request $request, $id)
     {
         $product = Product::findOrFail($id);
@@ -60,10 +74,8 @@ class ProductController extends Controller
             'tags' => 'sometimes|array',
         ]);
 
-        // Update product
         $product->update($validatedData);
 
-        // Sync categories and tags
         if ($request->has('categories')) {
             $product->categories()->sync($validatedData['categories']);
         }
@@ -75,7 +87,6 @@ class ProductController extends Controller
         return new ProductResource($product);
     }
 
-    // Delete a product
     public function destroy($id)
     {
         $product = Product::findOrFail($id);
