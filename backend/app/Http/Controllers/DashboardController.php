@@ -12,7 +12,7 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        $products = Product::with(['categories', 'tags'])->get();
+        $products = Product::with(['categories', 'tags'])->paginate(10);
         $categories = Category::all();
         $tags = Tag::all(); 
         return view('dashboard.dashboard', compact('products', 'categories', 'tags'));

@@ -12,6 +12,7 @@ class ProductController extends Controller
     {
         $categoryNames = $request->query('category');
         $tagNames = $request->query('tag');
+        $perPage = $request->query('per_page', 10);
 
         $categoryNames = $categoryNames ? explode(',', $categoryNames) : [];
         $tagNames = $tagNames ? explode(',', $tagNames) : [];
@@ -27,7 +28,7 @@ class ProductController extends Controller
                     $q->whereIn('name', $tagNames);
                 });
             })
-            ->get();
+            ->paginate($perPage);
 
         return ProductResource::collection($products);
     }

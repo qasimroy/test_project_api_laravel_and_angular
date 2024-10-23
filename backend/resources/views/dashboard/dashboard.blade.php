@@ -58,6 +58,9 @@
                 </tbody>
             </table>
         </div>
+        <div class="mt-6 flex justify-center text-gray-900 paginator">
+            {{ $products->links() }}
+        </div>
     </div>
 
     <script>

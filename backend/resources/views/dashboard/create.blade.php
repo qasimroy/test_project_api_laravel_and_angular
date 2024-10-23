@@ -10,7 +10,7 @@
 </head>
 
 <body class="bg-gray-100 flex flex-col items-center justify-center min-h-screen">
-    <h2 class="text-2xl font-bold mb-6">Create Product</h2>
+    <h2 class="text-2xl font-bold my-6">Create Product</h2>
     <form id="product-form" class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
         <div class="mb-4">
             <label for="product_name" class="block text-sm font-medium text-gray-700">Product Name</label>
